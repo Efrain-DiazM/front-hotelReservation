@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import ClientsList from '../components/clients/ClientsList';
-import ClientCreateModal from '../components/Clients/ClientCreateModal';
-import ClientEditModal from '../components/Clients/ClientEditModal';
+import ClientCreateModal from '../components/clients/ClientCreateModal';
+import ClientEditModal from '../components/clients/ClientEditModal';
 import { fetchClientsApi, deleteClientApi } from '../api';
 
 const ClientsPage = () => {
