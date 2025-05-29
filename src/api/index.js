@@ -5,7 +5,7 @@ const API_URL = 'http://3.87.22.96/api'; // Adjust the URL as needed
 
 // Clients
 export const fetchClientsApi = async () => {
-  const response = await axios.get(`${API_URL}/clientes/clientes`);
+  const response = await axios.get(`${API_URL}/clientes/clientes/`);
   return response.data;
 };
 
@@ -26,7 +26,7 @@ export const deleteClientApi = async (id) => {
 
 // Hotels
 export const fetchHotelsApi = async () => {
-  const response = await axios.get(`${API_URL}/hoteles/hoteles`);
+  const response = await axios.get(`${API_URL}/hoteles/hoteles/`);
   return response.data;
 };
 
@@ -42,7 +42,7 @@ export const deleteHotelApi = async (id) => {
 
 // Rooms
 export const fetchRoomsApi = async () => {
-  const response = await axios.get(`${API_URL}/habitaciones/habitaciones`);
+  const response = await axios.get(`${API_URL}/habitaciones/habitaciones/`);
   return response.data;
 };
 
@@ -53,7 +53,7 @@ export const createRoomApi = async (roomData) => {
 };
 
 export const fetchRoomsTypeApi = async () => {
-  const response = await axios.get(`${API_URL}/habitaciones/tiposHabitacion`);
+  const response = await axios.get(`${API_URL}/habitaciones/tiposHabitacion/`);
   return response.data;
 };
 
@@ -74,7 +74,7 @@ export const deleteRoomApi = async (id) => {
 
 // Reservations
 export const fetchReservations = async () => {
-  const response = await axios.get(`${API_URL}/reservas/reservas`);
+  const response = await axios.get(`${API_URL}/reservas/reservas/`);
   return response.data;
 };
 
@@ -95,7 +95,7 @@ export const fetchPromotionByCodeApi = async (codigo) => {
 
 // Employees
 export const fetchEmployeesApi = async () => {
-  const response = await axios.get(`${API_URL}/empleados/empleados`);
+  const response = await axios.get(`${API_URL}/empleados/empleados/`);
   return response.data;
 };
 
@@ -122,13 +122,13 @@ export const deactivateEmployeeApi = async (id) => {
 };
 
 export const fetchRolesApi = async () => {
-  const response = await axios.get(`${API_URL}/empleados/roles`);
+  const response = await axios.get(`${API_URL}/empleados/roles/`);
   return response.data;
 }
 
 // Promotions
 export const fetchPromotionsApi = async () => {
-  const response = await axios.get(`${API_URL}/promociones/promociones`);
+  const response = await axios.get(`${API_URL}/promociones/promociones/`);
   return response.data;
 };
 
@@ -146,7 +146,7 @@ export const fetchBilling = async () => {
 
 // Services
 export const fetchServicesApi = async () => {
-  const response = await axios.get(`${API_URL}/servicios/servicios`);
+  const response = await axios.get(`${API_URL}/servicios/servicios/`);
   return response.data;
 };
 
@@ -165,7 +165,7 @@ export const assignServiceToHotelApi = async (data) => {
 
 // Reviews
 export const fetchReviewsApi = async () => {
-  const response = await axios.get(`${API_URL}/resenas/resenas`);
+  const response = await axios.get(`${API_URL}/resenas/resenas/`);
   return response.data;
 };
 
