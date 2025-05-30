@@ -3,7 +3,7 @@ import {
   fetchClientsApi,
   fetchRoomsApi,
   fetchEmployeesApi,
-  createReservationApi,
+  createReservationWithInvoiceApi,
   fetchRoomAvailabilityAndCostApi,
   fetchPromotionByCodeApi,
 } from "../../api";
@@ -57,7 +57,7 @@ export default function ReservationCreateModal({ open, onClose, onReservationAdd
     setPromoInfo(null);
     if (!form.habitacion || !form.fecha_checkin || !form.fecha_checkout) {
       setError("Selecciona habitación y fechas.");
-      return;
+      return false;
     }
     try {
       const available = await fetchRoomAvailabilityAndCostApi({
@@ -68,35 +68,14 @@ export default function ReservationCreateModal({ open, onClose, onReservationAdd
       });
       if (!available.disponible) {
         setError("La habitación no está disponible en ese rango de fechas.");
-        return;
+        return false;
       }
-      // Calcular costo base
-      const room = rooms.find(r => r.id === Number(form.habitacion));
-      if (!room) {
-        setError("Habitación no encontrada.");
-        return;
-      }
-      const nights = (new Date(form.fecha_checkout) - new Date(form.fecha_checkin)) / (1000 * 60 * 60 * 24);
-      let costoBase = nights * parseFloat(room.precio_por_noche);
-      let descuento = 0;
-      let promo = null;
-      if (form.promocion) {
-        promo = await fetchPromotionByCodeApi(form.promocion);
-        if (promo) {
-          setPromoInfo(promo);
-          if (promo.descuento_porcentaje > 0) {
-            descuento = (costoBase * promo.descuento_porcentaje) / 100;
-          } else if (promo.descuento_fijo > 0) {
-            descuento = promo.descuento_fijo;
-          }
-        } else {
-          setError("Código promocional inválido.");
-          return;
-        }
-      }
-      setCosto((costoBase - descuento).toFixed(2));
+      setCosto(available.costo_total?.toFixed(2) ?? "0.00");
+      setPromoInfo(available.promo_info || null);
+      return true;
     } catch (err) {
       setError("Error al validar disponibilidad o calcular costo.");
+      return false;
     }
   };
 
@@ -109,20 +88,25 @@ export default function ReservationCreateModal({ open, onClose, onReservationAdd
     setLoading(true);
     setError("");
     try {
-      // Validar disponibilidad y costo antes de crear
-      await handleCheckAvailabilityAndCost();
-      if (error) return;
+      const isValid = await handleCheckAvailabilityAndCost();
+      if (!isValid) {
+        setLoading(false);
+        return;
+      }
+
       const payload = {
-        ...form,
-        cliente: Number(form.cliente),
-        habitacion: Number(form.habitacion),
-        empleado_checkin: form.empleado_checkin ? Number(form.empleado_checkin) : null,
-        empleado_checkout: form.empleado_checkout ? Number(form.empleado_checkout) : null,
+        hotel_id: rooms.find(r => r.id === Number(form.habitacion))?.hotel?.id,
+        habitacion_id: Number(form.habitacion),
+        cliente_id: Number(form.cliente),
+        fecha_checkin: form.fecha_checkin,
+        fecha_checkout: form.fecha_checkout,
         numero_adultos: Number(form.numero_adultos),
         numero_ninos: Number(form.numero_ninos),
-        costo_total_estimado: costo,
+        empleado_checkin_id: form.empleado_checkin ? Number(form.empleado_checkin) : null,
+        codigo_promo: form.promocion || null,
       };
-      await createReservationApi(payload);
+
+      await createReservationWithInvoiceApi(payload);
       onReservationAdded && onReservationAdded();
       onClose();
     } catch (err) {

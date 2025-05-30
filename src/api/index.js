@@ -189,5 +189,57 @@ export const fetchAvailableRoomsApi = async ({ hotel, fecha_checkin, fecha_check
 
 export const fetchRoomAvailabilityAndCostApi = async (data) => {
   const response = await axios.post(`${API_URL}/habitaciones/validar-disponibilidad-costo/`, data);
+  console.log('response.data:', response.data);
+  return response.data;
+};
+
+// CONSULTAS
+//Buscar habitaciones disponibles en un hotel específico, para un rango de fechas, con capacidad mínima y que tengan WiFi Gratis
+
+export const fetchAvailableRoomsWifiApi = async ({ hotel, fecha_checkin, fecha_checkout, capacidad_minima }) => {
+  const params = new URLSearchParams({
+    hotel,
+    fecha_checkin,
+    fecha_checkout,
+    capacidad_minima,
+  });
+  const response = await axios.get(`${API_URL}/reservas/disponibles-wifi/?${params.toString()}`);
+  return response.data;
+};
+
+// Calcular la puntuación media de las reseñas por cada hotel.
+export const fetchHotelsAverageScoreApi = async () => {
+  const response = await axios.get(`${API_URL}/reservas/puntuacion-media/`);
+  return response.data;
+};
+
+// Listar todas las habitaciones que nunca han sido reservadas.
+export const fetchNeverReservedRoomsApi = async () => {
+  const response = await axios.get(`${API_URL}/reservas/nunca-reservadas/`);
+  return response.data;
+};
+
+// Calcular el ingreso total facturado y pagado por hotel en el último mes.
+export const fetchHotelsIncomeLastMonthApi = async () => {
+  const response = await axios.get(`${API_URL}/reservas/ingresos-ultimo-mes/`);
+  return response.data;
+};
+
+//Listar todas las promociones activas y cuántas veces se ha usado cada una (mostrar 0 si no se ha usado). 
+export const fetchActivePromotionsWithUsageApi = async () => {
+  const response = await axios.get(`${API_URL}/reservas/activas-con-uso/`);
+  return response.data;
+};
+
+//Procedimiento para crear una reserva, validar disponibilidad, aplicar un código promocional (si se proporciona y es válido), calcular costo y crear la factura inicial.
+export const createReservationWithInvoiceApi = async (data) => {
+  const response = await axios.post(`${API_URL}/reservas/reservar-con-factura/`, data);
+  return response.data;
+};
+
+//Vista que muestra la ocupación actual por hotel
+export const fetchCurrentRoomStatusApi = async () => {
+  const response = await axios.get(`${API_URL}/reservas/estado-actual-habitaciones/`);
+  console.log('Estado actual de habitaciones:', response.data);
   return response.data;
 };
