@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 // const API_URL = 'http://localhost:8000/api'; // Adjust the URL as needed
-const API_URL = 'http://lb-hotelreservas-89009523.us-east-1.elb.amazonaws.com/api'; // Adjust the URL as needed
+const API_URL = 'http://LB-HR-811101056.us-east-1.elb.amazonaws.com/api'; // Adjust the URL as needed
 
 // Clients
 export const fetchClientsApi = async () => {
